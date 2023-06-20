@@ -26,6 +26,12 @@ $result = $conn->query($sql);
 
 if ($result->num_rows === 1) {
     $row = $result->fetch_assoc();
+} 
+else {
+    echo 'Book not found.';
+}
+
+$conn->close();
 ?>
 
 <form method="post" action="">
@@ -39,11 +45,5 @@ if ($result->num_rows === 1) {
     <button type="submit">Update</button>
 </form>
 
-<?php
-} else {
-    echo 'Book not found.';
-}
 
-$conn->close();
-?>
 
