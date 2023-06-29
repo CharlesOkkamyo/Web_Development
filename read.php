@@ -17,7 +17,7 @@
 
   <body>
     <nav class="navbar navbar-light justify-content-center fs-3 mb-5" style="background-color: #ADD8E6;">
-      PHP Complete CRUD Application
+      Index
     </nav>
     
   </body>
