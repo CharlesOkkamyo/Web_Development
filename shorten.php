@@ -37,7 +37,8 @@ if (isset($_POST['url'])) {
     $originalUrl = $_POST['url'];
 
     $shortCode = generateShortCode();
-    $shortenedUrl = "http://www.youtube.com/url_shortener/$shortCode";
+    $domain = parse_url($originalUrl, PHP_URL_HOST);
+    $shortenedUrl = "http://$domain/$shortCode"
 
     saveShortURL($originalUrl, $shortenedUrl);
 
