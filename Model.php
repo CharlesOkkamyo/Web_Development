@@ -1,5 +1,5 @@
 <?php
-class UrlModel {
+class Model {
     function generateShortCode($length = 6) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $shortCode = '';
