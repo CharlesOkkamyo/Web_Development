@@ -1,1 +1,4 @@
+<?php
 
+include 'Control.php';
+?>
