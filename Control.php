@@ -2,10 +2,10 @@
 require_once 'Model.php';
 
     class ShortenController {
-        private $urlModel;
+        private $Model;
 
         public function __construct() {
-            $this->urlModel = new Model();
+            $this->Model = new Model();
         }
 
         public function shortenUrl() {
@@ -15,7 +15,7 @@ require_once 'Model.php';
                 $shortCode = $this->urlModel->generateShortCode();
                 $shortenedUrl = "http://www.youtube.com/url_shortener/$shortCode";
 
-                $this->urlModel->saveShortURL($originalUrl, $shortenedUrl);
+                $this->Model->saveShortURL($originalUrl, $shortenedUrl);
 
                 header("Location: index.php?shortened_url=$shortenedUrl");
                 exit;
