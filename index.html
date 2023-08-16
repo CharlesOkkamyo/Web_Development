@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>Travel Booking App</title>
+</head>
+<body>
+    <h1>Travel Booking App</h1>
+    
+    <h2>Destinations</h2>
+    <ul id="destinations"></ul>
+
+    <h2>Flights</h2>
+    <ul id="flights"></ul>
+
+    <h2>Bookings</h2>
+    <ul id="bookings"></ul>
+
+    <h2>Create Booking</h2>
+    <form id="createBookingForm">
+        Flight ID: <input type="number" id="flightId" required><br>
+        Passenger Name: <input type="text" id="passengerName" required><br>
+        <button type="submit">Book Now</button>
+    </form>
+
+    <h2>Update Booking</h2>
+    <form id="updateBookingForm">
+        Booking ID: <input type="number" id="updateBookingId" required><br>
+        New Passenger Name: <input type="text" id="newPassengerName" required><br>
+        <button type="submit">Update Booking</button>
+    </form>
+
+    <h2>Delete Booking</h2>
+    <form id="deleteBookingForm">
+        Booking ID: <input type="number" id="deleteBookingId" required><br>
+        <button type="submit">Delete Booking</button>
+    </form>
+
+    <script>
+        const destinationsList = document.getElementById('destinations');
+        const flightsList = document.getElementById('flights');
+        const bookingsList = document.getElementById('bookings');
+        const createBookingForm = document.getElementById('createBookingForm');
+        const updateBookingForm = document.getElementById('updateBookingForm');
+        const deleteBookingForm = document.getElementById('deleteBookingForm');
+
+        // Function to fetch and display destinations, flights, and bookings
+        async function fetchData() {
+            const responseDestinations = await fetch('http://localhost/api.php?endpoint=destinations');
+            const destinations = await responseDestinations.json();
+            destinationsList.innerHTML = destinations.map(dest => `<li>${dest.name}</li>`).join('');
+
+            const responseFlights = await fetch('http://localhost/api.php?endpoint=flights');
+            const flights = await responseFlights.json();
+            flightsList.innerHTML = flights.map(flight => `<li>${flight.id}: ${flight.departure_datetime} to ${flight.arrival_datetime}</li>`).join('');
+
+            const responseBookings = await fetch('http://localhost/api.php?endpoint=bookings');
+            const bookings = await responseBookings.json();
+            bookingsList.innerHTML = bookings.map(booking => `<li>${booking.id}: ${booking.passenger_name}</li>`).join('');
+        }
+
+        // Event listener for creating a booking
+        createBookingForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const flightId = document.getElementById('flightId').value;
+            const passengerName = document.getElementById('passengerName').value;
+
+            const response = await fetch('http://localhost/travel_booking/api.php?endpoint=bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    flight_id: flightId,
+                    passenger_name: passengerName
+                })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            fetchData();
+        });
+
+        // Event listener for updating a booking
+        updateBookingForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const bookingId = document.getElementById('updateBookingId').value;
+            const newPassengerName = document.getElementById('newPassengerName').value;
+
+            const response = await fetch(`http://localhost/travel_booking/api.php?endpoint=bookings&booking_id=${bookingId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    booking_id: bookingId,
+                    new_passenger_name: newPassengerName
+                })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            fetchData();
+        });
+
+        // Event listener for deleting a booking
+        deleteBookingForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const bookingId = document.getElementById('deleteBookingId').value;
+
+            const response = await fetch(`http://localhost/travel_booking/api.php?endpoint=bookings&booking_id=${bookingId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            fetchData();
+        });
+
+        // Initial data fetch when the page loads
+        fetchData();
+    </script>
+</body>
+</html>
